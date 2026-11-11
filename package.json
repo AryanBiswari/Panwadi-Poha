@@ -8,14 +8,15 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "electron .",
-    "build": {
-      "files": [
-        "dist/**/*",
-        "src/**/*",
-        "node_modules/**/*",
-        "package.json"
-      ]
-    }
+    "build": "electron-builder"
+  },
+  "build": {
+    "files": [
+      "dist/**/*",
+      "src/**/*",
+      "node_modules/**/*",
+      "package.json"
+    ]
   },
   "repository": {
     "type": "git",
