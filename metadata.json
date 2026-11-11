@@ -1,0 +1,6 @@
+{
+  "name": "Panwadi Poha POS",
+  "description": "Offline-first Point of Sale (POS) and thermal receipt billing web application for Panwadi Poha.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
