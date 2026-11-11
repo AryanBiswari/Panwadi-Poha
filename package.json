@@ -12,16 +12,16 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/AryanBiswari/panwadi-poha-pos.git"
+    "url": "git+https://github.com/AryanBiswari/Panwadi-Poha.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "commonjs",
   "bugs": {
-    "url": "https://github.com/AryanBiswari/panwadi-poha-pos/issues"
+    "url": "https://github.com/AryanBiswari/Panwadi-Poha/issues"
   },
-  "homepage": "https://github.com/AryanBiswari/panwadi-poha-pos#readme",
+  "homepage": "https://github.com/AryanBiswari/Panwadi-Poha#readme",
   "devDependencies": {
     "electron": "^45.2.1",
     "electron-builder": "^26.18.0"
