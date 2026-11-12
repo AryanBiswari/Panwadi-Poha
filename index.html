@@ -1,3 +1,310 @@
+<!-- <!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Panwadi Poha POS</title>
+    <meta name="description" content="Offline-first Point of Sale (POS) and thermal receipt billing web application for Panwadi Poha." />
+    <meta property="og:title" content="Panwadi Poha POS" />
+    <meta property="og:description" content="Offline-first Point of Sale (POS) and thermal receipt billing web application for Panwadi Poha." />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600;700;800&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="src/index.css" />
+  </head>
+  <body>
+    
+    <div id="pos-screen-ui" class="pos-app-shell">
+      
+      <header class="pos-topbar">
+        
+        <a href="#top" id="brand-link" class="brand-wordmark">Panwadi Poha</a>
+
+        
+        <nav class="topbar-nav" aria-label="Workspace controls">
+          <button type="button" id="nav-paper-toggle" class="topbar-link font-mono-tabular">
+            Paper: 58mm
+          </button>
+          <button type="button" id="nav-slip-preview" class="topbar-link">
+            Receipt Preview
+          </button>
+          <button type="button" id="nav-today-summary" class="topbar-link font-mono-tabular">
+            Today: ₹0 (0 Orders)
+          </button>
+        </nav>
+
+        
+        <div class="topbar-action">
+          <button type="button" id="open-reports-btn" class="btn-primary-dark">
+            <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M18 20V10M12 20V4M6 20v-6" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+            <span>Reports</span>
+          </button>
+        </div>
+      </header>
+
+      
+      <main class="pos-workspace">
+        
+        <section class="menu-section" aria-label="Menu Grid">
+          <div class="menu-section-header">
+            <div class="menu-section-meta">
+              <strong class="text-strong">Quick-Service Menu (15 Items)</strong>
+              <span class="meta-sep" aria-hidden="true">·</span>
+              <span id="menu-token-hint">Tap any card to add to Token #01</span>
+            </div>
+            <div class="mobile-quick-links">
+              <button type="button" id="mobile-paper-toggle" class="link-underlined font-mono-tabular">58mm Roll</button>
+              <span class="meta-sep">·</span>
+              <button type="button" id="mobile-slip-btn" class="link-underlined">Slip Preview</button>
+            </div>
+          </div>
+
+          
+          <div id="menu-grid" class="menu-grid"></div>
+        </section>
+
+        
+        <aside class="cart-section" aria-label="Current Order Cart">
+          
+          <div class="cart-header">
+            <div>
+              <div class="cart-kicker">Active Customer Token</div>
+              <div class="cart-token-row">
+                <span id="active-token-number" class="cart-token-badge font-mono-tabular">#01</span>
+                <span id="active-cart-count" class="cart-item-count">· 0 items</span>
+              </div>
+            </div>
+
+            <div class="cart-header-actions">
+              <button type="button" id="cart-slip-btn" class="btn-secondary-outline" title="Preview thermal receipt">
+                <span>Slip</span>
+              </button>
+              <button type="button" id="clear-order-btn" class="btn-danger-soft" disabled>
+                <span>Clear Order</span>
+              </button>
+            </div>
+          </div>
+
+          
+          <div id="settled-banner" class="settled-banner hidden">
+            <div class="settled-banner-text">
+              <span id="settled-banner-msg">Settled Token #01 (₹0)</span>
+            </div>
+            <button type="button" id="reprint-last-btn" class="settled-reprint-link">Reprint Last</button>
+          </div>
+
+          
+          <div class="cart-table-head">
+            <div class="col-item">Item &amp; Rate</div>
+            <div class="col-qty">Qty</div>
+            <div class="col-amt">Amount</div>
+          </div>
+
+          
+          <div id="cart-items-container" class="cart-items-list"></div>
+
+          
+          <div class="cart-footer">
+            <div class="grand-total-row">
+              <div>
+                <span class="grand-total-label">Grand Total</span>
+                <span id="thermal-roll-subtitle" class="grand-total-sub">Inclusive of all taxes · 58mm thermal slip</span>
+              </div>
+              <div id="grand-total-amount" class="grand-total-value font-mono-tabular">₹0</div>
+            </div>
+
+            <button type="button" id="print-settle-btn" class="btn-settle-primary" disabled>
+              <svg class="icon-md" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M6 9V2h12v7M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2" stroke-linecap="round" stroke-linejoin="round"/>
+                <rect x="6" y="14" width="12" height="8" rx="1" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <span id="print-settle-label">Print &amp; Settle · Token #01</span>
+            </button>
+          </div>
+        </aside>
+      </main>
+
+      
+      <div id="slip-preview-modal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="slip-modal-title">
+        <div class="modal-card modal-card-sm">
+          <div class="modal-header">
+            <div>
+              <h2 id="slip-modal-title" class="modal-title">Thermal Printer Slip Preview</h2>
+              <p id="slip-modal-subtitle" class="modal-subtitle">Formatted for 58mm roll · Prints automatically on Settle</p>
+            </div>
+            <button type="button" id="close-slip-modal-btn" class="btn-icon-close" aria-label="Close Slip Preview">&times;</button>
+          </div>
+
+          <div class="slip-width-switcher">
+            <button type="button" id="preview-width-58" class="btn-seg active font-mono-tabular">58mm (2-Inch)</button>
+            <button type="button" id="preview-width-80" class="btn-seg font-mono-tabular">80mm (3-Inch)</button>
+          </div>
+
+          <div class="slip-preview-body">
+            <div id="screen-receipt-preview-holder" class="receipt-paper-frame"></div>
+          </div>
+
+          <div class="modal-footer-right">
+            <button type="button" id="modal-test-print-btn" class="btn-primary-dark">Test Browser Print</button>
+            <button type="button" id="modal-close-slip-btn" class="btn-secondary-outline">Close</button>
+          </div>
+        </div>
+      </div>
+
+      
+      <div id="reports-modal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="eod-modal-title">
+        <div class="modal-card modal-card-lg">
+          
+          <div class="modal-header">
+            <div>
+              <h2 id="eod-modal-title" class="modal-title">End-of-Day (EOD) Dashboard · Panwadi Poha</h2>
+              <p id="eod-modal-subtitle" class="modal-subtitle">Offline local storage ledger · Current Next Token: #01</p>
+            </div>
+            <button type="button" id="close-reports-modal-btn" class="btn-icon-close" aria-label="Close EOD Dashboard">&times;</button>
+          </div>
+
+          
+          <div class="eod-kpi-grid">
+            <div class="eod-kpi-box">
+              <div class="eod-kpi-label">Total Sales Amount</div>
+              <div id="kpi-total-revenue" class="eod-kpi-value text-emerald font-mono-tabular">₹0</div>
+            </div>
+            <div class="eod-kpi-box">
+              <div class="eod-kpi-label">Completed Orders</div>
+              <div id="kpi-total-orders" class="eod-kpi-value font-mono-tabular">0</div>
+            </div>
+            <div class="eod-kpi-box">
+              <div class="eod-kpi-label">Total Portions Sold</div>
+              <div id="kpi-total-units" class="eod-kpi-value font-mono-tabular">0</div>
+            </div>
+            <div class="eod-kpi-box">
+              <div class="eod-kpi-label">Avg Order Value</div>
+              <div id="kpi-avg-order" class="eod-kpi-value font-mono-tabular">₹0</div>
+            </div>
+          </div>
+
+          
+          <div class="eod-tabs-bar">
+            <div class="eod-tab-group">
+              <button type="button" data-tab="breakdown" class="eod-tab-btn active">Item-Wise Breakdown</button>
+              <button type="button" data-tab="orders" id="tab-orders-btn" class="eod-tab-btn">Recent Orders (0)</button>
+              <button type="button" data-tab="settings" class="eod-tab-btn">Printer &amp; UPI Setup</button>
+            </div>
+
+            <label id="zero-sales-filter-wrap" class="checkbox-label">
+              <input type="checkbox" id="show-zero-sales-checkbox" checked />
+              <span>Show items with 0 sales</span>
+            </label>
+          </div>
+
+          
+          <div class="eod-modal-body">
+            
+            <div id="tab-panel-breakdown" class="eod-tab-panel">
+              <div class="table-container">
+                <table class="eod-table">
+                  <thead>
+                    <tr>
+                      <th class="w-code">Code</th>
+                      <th>Menu Item</th>
+                      <th class="text-right">Rate</th>
+                      <th class="text-right">Qty Sold</th>
+                      <th class="text-right">Total Amount</th>
+                    </tr>
+                  </thead>
+                  <tbody id="eod-breakdown-tbody"></tbody>
+                  <tfoot>
+                    <tr class="eod-table-foot">
+                      <td colspan="3">Day Total</td>
+                      <td id="foot-total-qty" class="text-right font-mono-tabular">0</td>
+                      <td id="foot-total-revenue" class="text-right font-mono-tabular text-emerald">₹0</td>
+                    </tr>
+                  </tfoot>
+                </table>
+              </div>
+            </div>
+
+            
+            <div id="tab-panel-orders" class="eod-tab-panel hidden">
+              <div id="recent-orders-list" class="recent-orders-list"></div>
+            </div>
+
+            
+            <div id="tab-panel-settings" class="eod-tab-panel hidden">
+              <div class="settings-grid">
+                <div class="settings-form-col">
+                  <div class="settings-card">
+                    <label class="settings-label">Thermal Printer Roll Width</label>
+                    <p class="settings-help">Select the paper width matching your Bluetooth or USB thermal printer.</p>
+                    <div class="paper-choice-grid">
+                      <button type="button" id="setting-paper-58" class="paper-choice-btn active">
+                        <div class="font-mono-tabular font-bold">58mm (2-Inch Roll)</div>
+                        <div class="paper-choice-sub">Standard portable &amp; handheld POS printers</div>
+                      </button>
+                      <button type="button" id="setting-paper-80" class="paper-choice-btn">
+                        <div class="font-mono-tabular font-bold">80mm (3-Inch Roll)</div>
+                        <div class="paper-choice-sub">Desktop high-speed counter thermal printers</div>
+                      </button>
+                    </div>
+                  </div>
+
+                  <div class="settings-card">
+                    <label for="setting-upi-input" class="settings-label">Merchant UPI ID (for Receipt QR Code)</label>
+                    <p class="settings-help">Encoded into the receipt QR code along with the order Grand Total.</p>
+                    <input type="text" id="setting-upi-input" class="text-input font-mono-tabular" placeholder="panwadipoha@upi" />
+                  </div>
+
+                  <div class="settings-card">
+                    <label for="setting-tagline-input" class="settings-label">Receipt Header Subtitle</label>
+                    <input type="text" id="setting-tagline-input" class="text-input" placeholder="Fresh Poha · Hot Snacks · Pure Sweets" />
+                  </div>
+                </div>
+
+                <div class="settings-qr-col">
+                  <div class="settings-qr-title">Live Receipt QR Test (₹100 Sample)</div>
+                  <div id="settings-qr-preview"></div>
+                  <div id="settings-upi-readout" class="font-mono-tabular settings-upi-text">panwadipoha@upi</div>
+                  <div id="settings-paper-readout" class="settings-paper-text">Paper Format: 58mm</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          
+          <div class="eod-modal-footer">
+            <div class="reset-day-zone">
+              <button type="button" id="init-reset-day-btn" class="btn-danger-soft">
+                Reset Day &amp; Token to #01
+              </button>
+              <div id="confirm-reset-day-box" class="confirm-reset-box hidden">
+                <span class="confirm-reset-warning">Clear all sales &amp; reset token to 1?</span>
+                <button type="button" id="confirm-reset-yes-btn" class="btn-danger-solid">Yes, Reset Day</button>
+                <button type="button" id="confirm-reset-cancel-btn" class="btn-secondary-outline">Cancel</button>
+              </div>
+            </div>
+
+            <div class="export-zone">
+              <button type="button" id="export-csv-btn" class="btn-primary-dark">
+                Export CSV Report
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    
+    <div id="thermal-print-root" aria-hidden="true"></div>
+
+    <script type="module" src="src/app.js"></script>
+  </body>
+</html> -->
+
+
 <!doctype html>
 <html lang="en">
   <head>
@@ -238,6 +545,37 @@
               <div class="settings-grid">
                 <div class="settings-form-col">
                   <div class="settings-card">
+                    <label class="settings-label">Receipt QR Code Mode</label>
+                    <p class="settings-help">Choose how the payment QR code is generated on customer receipts.</p>
+                    <div class="paper-choice-grid">
+                      <button type="button" id="qr-mode-dynamic" class="paper-choice-btn active">
+                        <div class="font-bold">Dynamic UPI ID (Recommended)</div>
+                        <div class="paper-choice-sub">Pre-fills exact Order Grand Total in GPay, PhonePe &amp; Paytm</div>
+                      </button>
+                      <button type="button" id="qr-mode-upload" class="paper-choice-btn">
+                        <div class="font-bold">Custom QR Image Upload</div>
+                        <div class="paper-choice-sub">Use your own static GPay / PhonePe / Paytm QR photo</div>
+                      </button>
+                    </div>
+                  </div>
+
+                  <div id="dynamic-upi-settings-card" class="settings-card">
+                    <label for="setting-upi-input" class="settings-label">Merchant / Friend UPI ID</label>
+                    <p class="settings-help">Enter a valid UPI ID (e.g., <strong>name@okaxis</strong>, <strong>9876543210@ybl</strong>, <strong>shop@paytm</strong>). Scanning the receipt will automatically pre-fill the bill amount.</p>
+                    <input type="text" id="setting-upi-input" class="text-input font-mono-tabular" placeholder="e.g. yourname@okicici" autocomplete="off" spellcheck="false" />
+                    <div id="upi-validation-msg" class="upi-validation-msg"></div>
+                  </div>
+
+                  <div id="custom-qr-upload-card" class="settings-card hidden">
+                    <label for="setting-qr-file-input" class="settings-label">Upload Static Shop QR Code Image</label>
+                    <p class="settings-help">Upload a screenshot or photo of your UPI QR code. Saved offline in browser storage.</p>
+                    <div class="upload-controls-row">
+                      <input type="file" id="setting-qr-file-input" accept="image/*" class="file-input" />
+                      <button type="button" id="clear-custom-qr-btn" class="btn-danger-soft hidden">Remove Image</button>
+                    </div>
+                  </div>
+
+                  <div class="settings-card">
                     <label class="settings-label">Thermal Printer Roll Width</label>
                     <p class="settings-help">Select the paper width matching your Bluetooth or USB thermal printer.</p>
                     <div class="paper-choice-grid">
@@ -253,22 +591,16 @@
                   </div>
 
                   <div class="settings-card">
-                    <label for="setting-upi-input" class="settings-label">Merchant UPI ID (for Receipt QR Code)</label>
-                    <p class="settings-help">Encoded into the receipt QR code along with the order Grand Total.</p>
-                    <input type="text" id="setting-upi-input" class="text-input font-mono-tabular" placeholder="panwadipoha@upi" />
-                  </div>
-
-                  <div class="settings-card">
                     <label for="setting-tagline-input" class="settings-label">Receipt Header Subtitle</label>
                     <input type="text" id="setting-tagline-input" class="text-input" placeholder="Fresh Poha · Hot Snacks · Pure Sweets" />
                   </div>
                 </div>
 
                 <div class="settings-qr-col">
-                  <div class="settings-qr-title">Live Receipt QR Test (₹100 Sample)</div>
+                  <div id="settings-qr-title" class="settings-qr-title">Scannable UPI QR Test (₹100.00 Sample)</div>
                   <div id="settings-qr-preview"></div>
                   <div id="settings-upi-readout" class="font-mono-tabular settings-upi-text">panwadipoha@upi</div>
-                  <div id="settings-paper-readout" class="settings-paper-text">Paper Format: 58mm</div>
+                  <div id="settings-paper-readout" class="settings-paper-text">Scan with GPay / PhonePe / Paytm to test</div>
                 </div>
               </div>
             </div>
